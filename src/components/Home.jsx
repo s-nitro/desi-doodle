@@ -33,7 +33,7 @@ export default function Home({ uid, initialName, initialCode, onEnter }) {
         <input
           value={name}
           maxLength={20}
-          placeholder="e.g. Shubham"
+          placeholder="Enter Name"
           onChange={(e) => setName(e.target.value)}
         />
         {name === "shubham" && (
