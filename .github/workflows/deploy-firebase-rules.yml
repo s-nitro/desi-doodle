@@ -1,0 +1,28 @@
+# OPTIONAL. Deploys database.rules.json to Firebase whenever it changes on main (or when run manually).
+# You can skip this file and deploy rules by hand with:  firebase deploy --only database
+#
+# Setup: Firebase console → Project settings → Service accounts → Generate new private key.
+# Save the whole JSON file as the repo secret FIREBASE_SERVICE_ACCOUNT.
+# (The service account needs a role that can publish database rules, e.g. "Firebase Admin" for a small hobby project.)
+name: Deploy Firebase rules
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - database.rules.json
+      - firebase.json
+  workflow_dispatch:
+
+jobs:
+  rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - name: Deploy database rules
+        run: npx -y firebase-tools@latest deploy --only database --project "${{ secrets.VITE_FIREBASE_PROJECT_ID }}"
